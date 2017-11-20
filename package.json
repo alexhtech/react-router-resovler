@@ -1,6 +1,6 @@
 {
     "name": "react-router-resolver",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "react router resolver",
     "repository": "git@github.com:alexolefirenko/react-router-resovler.git",
     "author": "Alex <olefirenk@gmail.com>",
@@ -15,16 +15,16 @@
         "clean": "rm -rf ./commonjs ./es6"
     },
     "peerDependencies": {
-        "react": "^15 || ^16",
         "history": "^4.7.2",
+        "react": "^15 || ^16",
         "react-router": "^4.2.0",
         "react-router-config": "^1.0.0-beta.4"
     },
     "dependencies": {
-        "shallowequal": "^1.0.2",
-        "qs": "6.5.1",
         "is-browser": "^2.0.1",
-        "react-display-name": "^0.2.3"
+        "qs": "6.5.1",
+        "react-display-name": "^0.2.3",
+        "shallowequal": "^1.0.2"
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",
