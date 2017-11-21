@@ -35,7 +35,7 @@ class Resolver {
             await this.resolve(args[0])
             this.listeners.forEach(listener => listener(...args))
         } catch (e) {
-            if (e.code === 303) {
+            if (e.type === 'redirect') {
                 this.fail(e, location)
                 this.history.replace(e.to)
             } else {
