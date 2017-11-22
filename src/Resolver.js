@@ -88,7 +88,7 @@ class Resolver {
         const components = await Promise.all(matched.map(item => item.route.getComponent()))
         components.forEach((item, index) => {
             matched[index].route.component = item.default
-            this.injectOptionsFromComponent(item)
+            this.injectOptionsFromComponent(matched[index])
         })
     }
 
@@ -170,7 +170,10 @@ class Resolver {
         }
     }
 
-    resolve = (location) => Promise.all([this.resolveChunks(location), this.resolveData(location)])
+    resolve = async location => {
+        await this.resolveChunks(location)
+        await this.resolveData(location)
+    }
 }
 
 
