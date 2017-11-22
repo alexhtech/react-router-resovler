@@ -1,6 +1,6 @@
 {
     "name": "react-router-resolver",
-    "version": "0.0.2",
+    "version": "1.0.0-beta.1",
     "description": "react router resolver",
     "repository": "git@github.com:alexolefirenko/react-router-resovler.git",
     "author": "Alex <olefirenk@gmail.com>",
@@ -33,5 +33,16 @@
         "babel-preset-react": "^6.24.1",
         "babel-preset-stage-2": "^6.24.1",
         "cross-env": "^5.1.1"
-    }
+    },
+    "keywords": [
+        "react",
+        "router",
+        "route",
+        "routing",
+        "static routes",
+        "route config",
+        "react router",
+        "preload",
+        "onEnter"
+    ]
 }
