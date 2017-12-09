@@ -5,18 +5,29 @@ import {parse, makeLocation} from './helpers'
 
 
 class Resolver {
-    constructor({helpers = {}, routes, resolved = [], history, actions: [start, success, fail]}) {
+    constructor({helpers = {}, routes, resolved = [], history, actions = {}} = {}) {
         this.helpers = helpers
         this.routes = routes
         this.resolved = resolved
         this.history = history
         this.listeners = []
-        this.start = start
-        this.success = success
-        this.fail = fail
+        if (typeof actions.onStart === 'function') {
+            this.start = actions.onStart
+        }
+        if (typeof actions.onSuccess === 'function') {
+            this.success = actions.onSuccess
+        }
+        if (typeof actions.onFail === 'function') {
+            this.fail = actions.onFail
+        }
         this.injectListener(history)
     }
 
+    start = () => {}
+
+    success = () => {}
+
+    fail = () => {}
 
     getRoutes = () => this.routes
 
@@ -119,7 +130,12 @@ class Resolver {
                     ...this.helpers
                 }
 
-                onEnter && await onEnter(options)
+                if (typeof onEnter === 'function') {
+                    const result = await onEnter(options)
+                    if (typeof result === 'function') {
+                        await result(options)
+                    }
+                }
                 preload && !this.isResolved(branch[i], location) && await preload(options)
 
                 this.pushItem({
@@ -171,8 +187,17 @@ class Resolver {
     }
 
     resolve = async location => {
-        await this.resolveChunks(location)
-        await this.resolveData(location)
+        try {
+            await this.resolveChunks(location)
+            await this.resolveData(location)
+        } catch (e) {
+            if (e.type === 'redirect') {
+                this.fail(e, location)
+                this.history.replace(e.to)
+            } else {
+                throw e
+            }
+        }
     }
 }
 
