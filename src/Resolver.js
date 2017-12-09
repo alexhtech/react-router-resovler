@@ -21,6 +21,7 @@ class Resolver {
             this.fail = actions.onFail
         }
         this.injectListener(history)
+        this.location = {}
     }
 
     start = () => {
@@ -45,18 +46,8 @@ class Resolver {
     }
 
     notifyListeners = async (...args) => {
-        try {
-            await this.resolve(args[0])
-            this.listeners.forEach(listener => listener(...args))
-        } catch (e) {
-            if (e.type === 'redirect') {
-                this.fail(e, location)
-                this.history.replace(e.to)
-            } else {
-                this.fail(e, location)
-                this.history.goBack()
-            }
-        }
+        await this.resolve(args[0])
+        this.listeners.forEach(listener => listener(...args))
     }
 
     injectListener = ({listen}) => {
@@ -193,12 +184,18 @@ class Resolver {
         try {
             await this.resolveChunks(location)
             await this.resolveData(location)
+            this.location = location
         } catch (e) {
             if (e.type === 'redirect') {
                 this.fail(e, location)
                 this.history.replace(e.to)
             } else {
-                throw e
+                this.fail(e, location)
+                if (this.location) {
+                    this.history.replace(this.location)
+                } else {
+                    throw e
+                }
             }
         }
     }
