@@ -23,11 +23,14 @@ class Resolver {
         this.injectListener(history)
     }
 
-    start = () => {}
+    start = () => {
+    }
 
-    success = () => {}
+    success = () => {
+    }
 
-    fail = () => {}
+    fail = () => {
+    }
 
     getRoutes = () => this.routes
 
@@ -93,7 +96,7 @@ class Resolver {
             if (!item.route.component && typeof item.route.getComponent === 'function') {
                 matched.push(item)
             } else {
-                this.injectOptionsFromComponent(item)
+                item.route.component && this.injectOptionsFromComponent(item)
             }
         })
         const components = await Promise.all(matched.map(item => item.route.getComponent()))
