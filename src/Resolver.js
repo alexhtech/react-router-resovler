@@ -21,7 +21,8 @@ class Resolver {
             this.fail = actions.onFail
         }
         this.injectListener(history)
-        this.location = {}
+        this.location = null
+        this.lock = false
     }
 
     start = () => {
@@ -46,8 +47,24 @@ class Resolver {
     }
 
     notifyListeners = async (...args) => {
-        await this.resolve(args[0])
-        this.listeners.forEach(listener => listener(...args))
+        if (this.lock) return
+        try {
+            await this.resolve(args[0])
+            this.listeners.forEach(listener => listener(...args))
+            this.location = args[0]
+        } catch (e) {
+            if (typeof e === 'object' && e.type === 'redirect') {
+                this.fail()
+                this.history.replace(e.to)
+            } else {
+                if (this.location) {
+                    this.fail()
+                    this.history.replace(this.location)
+                } else {
+                    this.fail()
+                }
+            }
+        }
     }
 
     injectListener = ({listen}) => {
@@ -180,24 +197,25 @@ class Resolver {
         }
     }
 
-    resolve = async location => {
+    resolve = async (location) => {
+        await this.resolveChunks(location)
+        await this.resolveData(location)
+    }
+
+    init = async location => {
+        this.lock = true
         try {
-            await this.resolveChunks(location)
-            await this.resolveData(location)
-            this.location = location
+            await this.resolve(location)
         } catch (e) {
-            if (e.type === 'redirect') {
-                this.fail(e, location)
+            this.fail()
+            if (typeof e === 'object' && e.type === 'redirect') {
                 this.history.replace(e.to)
+                await this.init(e.to)
             } else {
-                this.fail(e, location)
-                if (this.location) {
-                    this.history.replace(this.location)
-                } else {
-                    throw e
-                }
+                throw e
             }
         }
+        this.lock = false
     }
 }
 
