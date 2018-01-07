@@ -97,21 +97,29 @@ class Resolver {
         }
     }
 
-    resolveChunks = async (location) => {
+    resolveChunks = async (location, routes = this.routes) => {
         const matched = []
         const {pathname} = location
-        matchRoutes(this.routes, pathname).forEach((item) => {
+        matchRoutes(routes, pathname).forEach((item) => {
             if (!item.route.component && typeof item.route.getComponent === 'function') {
                 matched.push(item)
             } else {
                 item.route.component && this.injectOptionsFromComponent(item)
             }
         })
+
+
         const components = await Promise.all(matched.map(item => item.route.getComponent()))
         components.forEach((item, index) => {
             matched[index].route.component = item.default
             this.injectOptionsFromComponent(matched[index])
         })
+
+        const last = matched.length - 1
+
+        if (matched[last] && matched[last].route.routes) {
+            await this.resolveChunks(location, matched[last].route.routes)
+        }
     }
 
     resolveData = async (location) => {
