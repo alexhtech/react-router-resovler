@@ -132,8 +132,6 @@ class Resolver {
 
         if (branch.length === 0) return;
 
-        this.start(location)
-
         for (const i in branch) {
             if (Object.prototype.hasOwnProperty.call(branch, i)) {
                 const {match: {params}, route: {preload, path, onEnter}} = branch[i]
@@ -165,8 +163,6 @@ class Resolver {
                 })
             }
         }
-
-        this.success(location)
     }
 
     isResolved = ({match: {params, path}, route: {preloadOptions = {}}}, {search = ''}) => {
@@ -206,8 +202,12 @@ class Resolver {
     }
 
     resolve = async (location) => {
+        this.start(location)
+
         await this.resolveChunks(location)
         await this.resolveData(location)
+
+        this.success(location)
     }
 
     init = async location => {
