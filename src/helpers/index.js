@@ -24,25 +24,3 @@ export {
     parse,
     makeLocation
 }
-
-
-
-test = {
-    component: Test,
-    preload: async ({helpers}) => {
-        const data = await getSomeData()
-        helpers.dispatch({
-            type: 'PUT_DATA',
-            payload: data
-        })
-    },
-    preloadOptions: { // this is default options
-        alwaysReload: false,
-        reloadOnParamsChange: true,
-        reloadOnQueryChange: true
-    },
-    onEnter: ({check}) => check({
-        authenticated: true,
-        anonymous: false
-    })
-}
