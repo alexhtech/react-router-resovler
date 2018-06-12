@@ -1,8 +1,8 @@
 import { matchRoutes, RouteConfig as $RouteConfig, MatchedRoute as $MatchedRoute } from 'react-router-config'
 import * as shallowEqual from 'shallowequal'
-import { Action, History, Location } from 'history'
+import { Action, History } from 'history'
 import { LocationListener } from 'history'
-import { parse, makeLocation } from './helpers'
+import { parse, makeLocation, Location } from './helpers'
 
 const isBrowser: boolean = require('is-browser')
 
@@ -14,7 +14,7 @@ export type PreloadProps = {
     params?: {
         [key: string]: any
     }
-    redirect(location: Location): void
+    redirect(location: Location | string): void
     [key: string]: any
 }
 

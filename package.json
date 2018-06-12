@@ -1,6 +1,6 @@
 {
     "name": "react-router-resolver",
-    "version": "1.0.0-beta.11",
+    "version": "1.0.0-beta.12",
     "description": "react router resolver",
     "repository": "git@github.com:alexolefirenko/react-router-resovler.git",
     "author": "Alex <olefirenk@gmail.com>",
