@@ -1,13 +1,10 @@
 import getDisplayName from 'react-display-name'
+import { OnEnter } from '../Resolver'
 
-
-const onEnter = (onEnter) => Component => {
+const onEnter = (onEnter: OnEnter) => (Component: any) => {
     Component.onEnter = onEnter
     Component.displayName = getDisplayName(Component)
     return Component
 }
 
-
-export {
-    onEnter as default
-}
+export default onEnter

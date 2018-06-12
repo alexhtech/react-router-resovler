@@ -8,12 +8,15 @@
     "main": "./commonjs/index.js",
     "module": "./es6/index.js",
     "jsnext:main": "./es6/index.js",
+    "typings": "./types/index.d.ts",
     "scripts": {
-        "build:es6": "cross-env NODE_ENV=es6 node_modules/babel-cli/bin/babel.js src --out-dir ./es6",
-        "build:commonjs": "cross-env NODE_ENV=commonjs node_modules/babel-cli/bin/babel.js src --out-dir ./commonjs",
+        "build:es6": "cross-env tsc --target es6 --outDir ./es6",
+        "build:commonjs": "cross-env tsc --target es5 --module commonjs --outDir ./commonjs",
         "build": "npm run clean && npm run build:es6 && npm run build:commonjs",
         "clean": "rm -rf ./commonjs ./es6",
-        "test": "jest"
+        "test": "jest",
+        "test:coverage": "jest --coverage",
+        "deploy": "yarn test && yarn build && yarn publish"
     },
     "peerDependencies": {
         "history": "^4.7.2",
@@ -22,23 +25,34 @@
         "react-router-config": "^1.0.0-beta.4"
     },
     "dependencies": {
+        "@types/history": "^4.6.2",
+        "@types/qs": "^6.5.1",
+        "@types/react-router-config": "^1.0.7",
+        "@types/shallowequal": "^0.2.2",
         "is-browser": "^2.0.1",
         "qs": "6.5.1",
         "react-display-name": "^0.2.3",
         "shallowequal": "^1.0.2"
     },
     "devDependencies": {
-        "babel-cli": "^6.26.0",
-        "babel-plugin-transform-runtime": "^6.23.0",
-        "babel-preset-env": "^1.6.0",
-        "babel-preset-react": "^6.24.1",
-        "babel-preset-stage-2": "^6.24.1",
+        "@types/jest": "^23.0.0",
+        "@types/node-fetch": "^2.1.1",
         "cross-env": "^5.1.1",
+        "eslint": "^4.19.1",
+        "eslint-config-airbnb": "^16.1.0",
+        "eslint-plugin-import": "^2.12.0",
+        "eslint-plugin-jsx-a11y": "^6.0.3",
+        "eslint-plugin-prettier": "^2.6.0",
+        "eslint-plugin-react": "^7.9.1",
         "history": "^4.7.2",
         "jest": "^22.1.4",
+        "prettier": "^1.13.5",
         "react": "^16.2.0",
         "react-router": "^4.2.0",
-        "react-router-config": "^1.0.0-beta.4"
+        "react-router-config": "^1.0.0-beta.4",
+        "ts-jest": "^22.4.6",
+        "typescript": "^2.9.1",
+        "typescript-eslint-parser": "^16.0.0"
     },
     "keywords": [
         "react",
@@ -50,5 +64,19 @@
         "react router",
         "preload",
         "onEnter"
-    ]
+    ],
+    "jest": {
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
+        "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+        "moduleFileExtensions": [
+            "ts",
+            "tsx",
+            "js",
+            "jsx",
+            "json",
+            "node"
+        ]
+    }
 }

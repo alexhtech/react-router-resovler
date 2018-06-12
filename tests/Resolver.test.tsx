@@ -1,29 +1,31 @@
-import React from 'react'
-import {renderRoutes} from 'react-router-config'
+import * as React from 'react'
+import { renderRoutes } from 'react-router-config'
 import createHistory from 'history/createMemoryHistory'
-import Resolver from '../src/Resolver'
+import Resolver, { RouteConfig } from '../src/Resolver'
 
-
-const getTestData = () => new Promise((res, rej) => {
-    res({
-        id: 1,
-        user: 'alex'
+const getTestData = () =>
+    new Promise((res, rej) => {
+        res({
+            id: 1,
+            user: 'alex'
+        })
     })
-})
 
 const history = createHistory()
 
-const storage = {}
+const storage = {
+    testData: ''
+}
 
-const routes = [
+const routes: RouteConfig[] = [
     {
         path: '/',
-        component: ({route}) => <div>{renderRoutes(route.routes)}</div>,
+        component: ({ route }: any) => <div>{renderRoutes(route && route.routes)}</div>,
         routes: [
             {
                 path: '/test',
                 component: () => <div>{JSON.stringify(storage.testData)}</div>,
-                preload: async ({storage}) => {
+                preload: async ({ storage }) => {
                     storage.testData = await getTestData()
                 }
             }
@@ -32,11 +34,11 @@ const routes = [
 ]
 
 const helpers = {
-    helper: () => 'I\'m helper',
+    helper: () => "I'm helper",
     storage
 }
 
-let resolver
+let resolver: Resolver
 
 test('initialize', () => {
     resolver = new Resolver({
@@ -45,18 +47,11 @@ test('initialize', () => {
         resolved: [],
         history,
         actions: {
-            onStart: () => {
-
-            },
-            onSuccess: () => {
-
-            },
-            onFail: () => {
-
-            }
+            onStart: () => {},
+            onSuccess: () => {},
+            onFail: () => {}
         }
     })
-    expect(resolver instanceof Resolver).toBe(true)
 })
 
 test('routes eq', () => {
@@ -66,7 +61,9 @@ test('routes eq', () => {
 test('helpers && preload hook', async () => {
     const location = {
         pathname: '/test',
-        search: ''
+        search: '',
+        state: null,
+        hash: ''
     }
 
     await resolver.resolve(location)
@@ -74,14 +71,12 @@ test('helpers && preload hook', async () => {
 })
 
 test('resolved routes', () => {
-    expect(resolver.getResolved()).toEqual(
-        [
-            {
-                params: {},
-                path: '/test',
-                search: '',
-                isServer: true
-            }
-        ]
-    )
+    expect(resolver.getResolved()).toEqual([
+        {
+            params: {},
+            path: '/test',
+            search: '',
+            isServer: true
+        }
+    ])
 })
