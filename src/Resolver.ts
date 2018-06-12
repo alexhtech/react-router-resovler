@@ -18,9 +18,9 @@ export type PreloadProps = {
     [key: string]: any
 }
 
-export type Preload = (props: PreloadProps) => Promise<void>
+export type Preload = (props: PreloadProps) => Promise<void> | any
 
-export type OnEnter = (props: PreloadProps) => Promise<void> | OnEnter
+export type OnEnter = (props: PreloadProps) => Promise<void> | any | OnEnter
 
 export type PreloadOptions = {
     alwaysReload?: boolean
