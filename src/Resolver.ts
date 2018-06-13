@@ -48,7 +48,7 @@ export interface ResolverConstructor {
     routes: RouteConfig[]
     resolved?: Resolved[]
     history: History
-    actions: {
+    actions?: {
         onStart?: OnStart
         onSuccess?: OnSuccess
         onFail?: OnFail
